@@ -1,0 +1,99 @@
+
+/*@define-color arc-blue #0062f5;*/
+@define-color arc-blue #209ddd;
+/*@define-color arc-blue-light #4accf5;*/
+@define-color arc-blue-light #209ddd;
+@define-color arc-black #2d323d;
+@define-color arc-red #000000;
+@define-color arc-blue-hover #629de2;
+@define-color arc-blue-active #3aa3e2;
+
+
+
+	GtkLabel {
+		/*font: 12px;*/
+	}
+	#WINDOW {
+		background-color: #ffffff;
+}
+	
+	
+	
+	#OPTION_BUTTON {
+		/*
+		border: 0px;
+		background-color: #ffffff;
+		box-shadow: -0.5px 2px 3px #cdcdcd;
+		*/
+		
+	}
+
+	#OPTION_BUTTON:hover {
+		
+		/*border: 0px;*/
+		background-color: #209ddd	;
+		/*box-shadow: -0.5px 4px 4px #cecece;*/
+	}
+	
+	#OPTION_BUTTON:focus {
+		
+		/*border: 0px;*/
+		background-color: #209ddd	;
+		/*box-shadow: -0.5px 4px 4px #cecece;*/
+	}
+
+	#OPTION_BUTTON .label {
+		color: rgba(0,0,0,0.5);
+	}
+	
+	#OPTION_BUTTON:hover .label {
+		color: rgba(255,255,255,1);
+	}
+	
+	
+	#OPTION_ENTRY {
+		border: 0px;
+		background-color: #ffffff;
+	}
+	
+	#OPTION_ENTRY:hover{
+		
+	}
+	
+	
+.entry
+{
+                color: #666666;
+                border: none;
+                /*border-radius: 5px;*/
+                background-color: @arc-blue;
+                border-bottom: 1px solid #aaaaaa;
+                padding: 4px;
+               /*background: #eeeeee;*/
+
+                /*border-bottom: 2px solid transparent;*/
+
+}
+
+
+.entry:focus
+{
+                color: @arc-blue;
+                border-bottom: 2px solid @arc-blue-light;
+                /*border-bottom: 2px solid rgba(0,0,0,0);*/
+                /*background-color: transparent;*/
+
+
+}
+
+.entry:selected
+{
+        color: white;
+}
+
+.entry:disabled
+{
+        background-color: #bbbbbb;
+        border-bottom: 1px solid transparent;
+        color: #999999;
+}
