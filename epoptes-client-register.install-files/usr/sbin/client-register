@@ -1,0 +1,182 @@
+#!/usr/bin/python3
+
+import argparse
+import sys
+import json
+import os
+
+route='/var/lib/n4d/variables/'
+n4d_var_code="CENTER_CODE"
+n4d_var_classroom="CLIENT_CLASSROOM"
+classroom_options=['Aula 1','Aula 2','Aula 3','Aula 4']
+
+
+def show_info():
+	try:
+		
+		center_code=center_info()
+		text_solved='Center Code: %s'%center_code
+		print(text_solved)
+		
+		client_classroom=classroom_info()
+		text_solved='Aula: %s'%client_classroom	
+		print(text_solved)
+
+	except Exception as e:
+		print('Error in show_info: %s'%e)
+		return True
+
+# def show_info()
+
+
+
+
+
+def center_info():
+	try:
+		#Reading CENTER_CODE
+		center_code_var=route+n4d_var_code
+		if os.path.isfile(center_code_var):
+			with open(center_code_var,'r') as f:
+				center_code_data=json.load(f)
+			center_code=center_code_data['CENTER_CODE']['value']
+		else:
+			center_code='None'
+
+		return center_code
+
+	except Exception as e:
+		print('Error in show_info: %s'%e)
+		return ('None')
+
+# def center_info()
+
+
+
+
+
+
+def classroom_info():
+	try:
+		#Reading CLIENT_CLASSROOM
+		client_classroom_var=route+n4d_var_classroom
+		if os.path.isfile(client_classroom_var):
+			with open(client_classroom_var,'r') as f:
+				client_classroom_data=json.load(f)
+			client_classroom=client_classroom_data['CLIENT_CLASSROOM']['value']
+		else:
+			client_classroom='None'
+
+		return client_classroom
+
+	except Exception as e:
+		print('Error in show_info: %s'%e)
+		return ('None')
+
+# def classroom_info()
+
+
+
+
+
+
+def options_info():
+	try:
+		#Reading CLASSROOM OPTIONS FOR THIS CENTER
+		aulas=classroom_options
+		if len(aulas)>0:
+			print(' Clasrooms Availables')
+			print('----------------------')
+			for elem in aulas:
+				print(elem)
+		else:
+			print(' No clasrooms vailables')
+
+	except Exception as e:
+		print('Error in show_info: %s'%e)
+
+# def classroom_info()
+
+
+
+
+
+
+def register_info():
+	try:
+		#Registering CLIENT_CLASSROOM
+		option='None'
+		while option not in classroom_options:
+			print('')
+			options_info()
+			print('')
+			print('"C" or "c" or "cancel" to stop this process.')
+			print('')
+			option=input(' Select one Classroom: ')
+			if option in ['c','C','cancel']:
+				break
+
+		client_classroom_var=route+n4d_var_classroom
+		if os.path.isfile(client_classroom_var):
+			with open(client_classroom_var,'r') as f:
+				client_classroom_data=json.load(f)
+				client_classroom_data['CLIENT_CLASSROOM']['value']=option
+			with open(client_classroom_var,'w') as f:
+				json.dump(client_classroom_data, f)
+
+		print('')
+		print(' New Register Information')
+		print('---------------------------')
+		show_info()
+
+	except Exception as e:
+		print('Error in register_info: %s'%e)
+
+# def register_info()
+
+
+
+
+
+
+try:
+	#
+	# MAIN PROGRAM
+	#
+
+	parser = argparse.ArgumentParser(description='Information about college & clasroom for this PC')
+	parser.add_argument('-s','--show',metavar='',action='store_const',help='Get all information',const=True)
+	parser.add_argument('-c','--center',metavar='',action='store_const',help='Get Cod-Center information',const=True)
+	parser.add_argument('-cl','--classroom',metavar='',action='store_const',help='Get Classroom information',const=True)
+	parser.add_argument('-o','--options',metavar='',action='store_const',help='Get Classroom information',const=True)
+	parser.add_argument('-r','--register',metavar='',action='store_const',help='Register the pc with a center code and a classroom. client-register -r cetro_01 aula_03',const=True)
+
+
+	args=parser.parse_args()
+
+	if args.show:
+		print(' Register Information')
+		print('----------------------')
+		show_info()
+		#exit_return_code_mode=args.with_return_code[0]
+
+	if args.center:
+		print('Center Code: %s'%center_info())
+
+	if args.classroom:
+		print('Aula: %s'%classroom_info())
+
+	if args.options:
+		options_info()
+
+	if args.register:
+		register_info()
+
+except KeyboardInterrupt:
+	print('')
+	print('Process aborted')
+
+except Exception as e:
+	print('Error in client_register: %s'%e)
+
+
