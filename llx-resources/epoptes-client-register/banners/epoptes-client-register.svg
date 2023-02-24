@@ -261,15 +261,15 @@
     <filter
        inkscape:collect="always"
        style="color-interpolation-filters:sRGB"
-       id="filter31069"
-       x="-0.0092717948"
-       y="-0.073424003"
-       width="1.0185436"
-       height="1.146848">
+       id="filter32747"
+       x="-0.010737419"
+       y="-0.11789966"
+       width="1.0214748"
+       height="1.2357993">
       <feGaussianBlur
          inkscape:collect="always"
-         stdDeviation="2.6646672"
-         id="feGaussianBlur31071" />
+         stdDeviation="0.18966508"
+         id="feGaussianBlur32749" />
     </filter>
   </defs>
   <sodipodi:namedview
@@ -279,9 +279,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="2.4251554"
-     inkscape:cx="58.759121"
-     inkscape:cy="78.75784"
+     inkscape:zoom="4.8503108"
+     inkscape:cx="115.55961"
+     inkscape:cy="65.768981"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -342,14 +342,14 @@
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:1.56974px;line-height:0%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#c8beb7;fill-opacity:1;stroke:none;stroke-width:0.130812px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="0.84940445"
+       x="1.3454982"
        y="286.34799"
        id="text7739-5-1-0"><tspan
          sodipodi:role="line"
          id="tspan7741-0-8-6"
-         x="0.84940445"
+         x="1.3454982"
          y="286.34799"
-         style="font-size:1.72421px;line-height:1.25;stroke-width:0.130812px;fill:#c8beb7">Registra el equipo para el control del epoptes</tspan></text>
+         style="font-size:1.72421px;line-height:1.25;fill:#c8beb7;stroke-width:0.130812px">Registra el equipo para el control del epoptes</tspan></text>
     <image
        width="36.183769"
        height="14.118766"
@@ -641,34 +641,29 @@
            style="fill:#ffffff;fill-opacity:1" />
       </g>
     </g>
-    <g
-       id="g5439-2-6-5"
-       transform="matrix(0.05218958,0,0,0.05218958,24.506613,286.62601)"
-       style="fill:#000000;filter:url(#filter31069)">
-      <text
-         id="text5417-3-4-2-6"
-         y="-81.409805"
-         x="-535.54022"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10.2321px;line-height:0%;font-family:'League Gothic';-inkscape-font-specification:'League Gothic, Normal';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.852673px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         xml:space="preserve"
-         transform="scale(0.85267345,1.1727819)"><tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:76.7406px;line-height:1.25;font-family:Kalimati;-inkscape-font-specification:Kalimati;fill:#000000;stroke-width:0.852673px"
-           y="-81.409805"
-           x="-535.54022"
-           id="tspan5419-2-9-6-1"
-           sodipodi:role="line">Epoptes Client Register</tspan></text>
-    </g>
     <text
        id="text5417-3-4-2-6-7"
-       y="239.96512"
+       y="241.49107"
        x="0.92906654"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:0.534009px;line-height:0%;font-family:'League Gothic';-inkscape-font-specification:'League Gothic, Normal';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.0445006px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;filter:url(#filter32747)"
+       xml:space="preserve"
+       transform="scale(0.85267346,1.1727819)"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.00506px;line-height:1.25;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;fill:#000000;fill-opacity:1;stroke-width:0.0445006px"
+         y="241.49107"
+         x="0.92906654"
+         id="tspan5419-2-9-6-1-8"
+         sodipodi:role="line">Epoptes Client Register</tspan></text>
+    <text
+       id="text5417-3-4-2-6-7-7"
+       y="241.31506"
+       x="1.0085294"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:0.534009px;line-height:0%;font-family:'League Gothic';-inkscape-font-specification:'League Gothic, Normal';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#c8beb7;fill-opacity:1;stroke:none;stroke-width:0.0445006px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        xml:space="preserve"
        transform="scale(0.85267346,1.1727819)"><tspan
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.00506px;line-height:1.25;font-family:Kalimati;-inkscape-font-specification:Kalimati;fill:#c8beb7;fill-opacity:1;stroke-width:0.0445006px"
-         y="239.96512"
-         x="0.92906654"
-         id="tspan5419-2-9-6-1-8"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.00506px;line-height:1.25;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;fill:#c8beb7;fill-opacity:1;stroke-width:0.0445006px"
+         y="241.31506"
+         x="1.0085294"
+         id="tspan5419-2-9-6-1-8-7"
          sodipodi:role="line">Epoptes Client Register</tspan></text>
   </g>
   <g
