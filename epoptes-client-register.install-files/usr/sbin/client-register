@@ -148,29 +148,40 @@ try:
 	parser.add_argument('-s','--show',metavar='',action='store_const',help='Get all information',const=True)
 	parser.add_argument('-c','--center',metavar='',action='store_const',help='Get Cod-Center information',const=True)
 	parser.add_argument('-cl','--classroom',metavar='',action='store_const',help='Get Classroom information',const=True)
-	parser.add_argument('-o','--options',metavar='',action='store_const',help='Get Classroom information',const=True)
-	parser.add_argument('-r','--register',metavar='',action='store_const',help='Register the pc with a center code and a classroom. client-register -r cetro_01 aula_03',const=True)
+	parser.add_argument('-o','--options',metavar='',action='store_const',help='List all Classrooms availables',const=True)
+	parser.add_argument('-r','--register',metavar='',action='store_const',help='Register the pc with a center code and a classroom. client-register -r',const=True)
 
 
 	args=parser.parse_args()
+
+	args_len=False
 
 	if args.show:
 		print(' Register Information')
 		print('----------------------')
 		show_info()
+		args_len=True
 		#exit_return_code_mode=args.with_return_code[0]
 
 	if args.center:
 		print('Center Code: %s'%center_info())
+		args_len=True
 
 	if args.classroom:
 		print('Aula: %s'%classroom_info())
+		args_len=True
 
 	if args.options:
 		options_info()
+		args_len=True
 
 	if args.register:
 		register_info()
+		args_len=True
+
+	if not args_len:
+		parser.print_help()
+
 
 except KeyboardInterrupt:
 	print('')
