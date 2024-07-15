@@ -487,7 +487,7 @@ class EpoptesClientRegister:
 			for line in lines:
 				print(3)
 				if "SERVER" in line:
-					line = "SERVER=%s"%server
+					line = "SERVER=%s\n"%server
 				newlines.append(line)
 			file_orig.close()
 			print(4)
