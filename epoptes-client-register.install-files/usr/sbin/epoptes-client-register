@@ -9,5 +9,5 @@ import EpoptesClientRegister
 if __name__=="__main__":
 	args={}
 	args["gui"]=True
-	args["server"]="server"
+	args["server"]="localhost"
 	ls=EpoptesClientRegister.EpoptesClientRegister(args)
