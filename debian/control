@@ -8,6 +8,6 @@ Standards-Version: 3.9.5
 
 Package: epoptes-client-register
 Architecture: all
-Depends: ${misc:Depends},python3
+Depends: ${misc:Depends},python3,n4d-epoptes-client
 Description: Epoptes Client Register
  Register your PC with GVA Center Code & Clasrroom code.
