@@ -289,6 +289,7 @@ class EpoptesClientRegister:
 					else:
 						solved=self.set_new_epoptes_server(file,ipserver)
 						print(solved)
+						self.restart_client_service()
 						if solved:
 							self.register_msg_label.set_markup("<span foreground='blue'>"+_("Computer registered  - Center:%s  - Classroom:%s "%(center_code,aula))+"</span>")
 						else:
@@ -505,6 +506,21 @@ class EpoptesClientRegister:
 			return False
 			
 	#def_set_new_epoptes_server
+
+
+	def restart_client_service(self):
+		try:
+			cmd="systemctl restart epoptes-client.service"
+			os.system(cmd)
+			self.dprint("Restarting epoptes-client-service...")
+			return True
+
+		except Exception as e:
+			self.dprint("Error restart_client_service")
+			self.register_msg_label.set_markup("<span foreground='red'>"+_("Error restart_client_service")+"</span>")
+			return "Error restart_client_service"
+
+	#def restart_client_service
 
 
 
