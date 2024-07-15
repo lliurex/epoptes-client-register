@@ -66,6 +66,11 @@ class EpoptesClientRegister:
 
 	n4d_var_code="CENTER_CODE"
 	n4d_var_classroom="CLIENT_CLASSROOM"
+	n4d_var_epoptes_ipserver='EPOPTES IP SERVER'
+	
+	server_list=[]
+	aulas=[]
+	server_list_file='/usr/share/epoptes-client-register/server_ip.list'
 	
 	def dprint(self,arg):
 		if EpoptesClientRegister.DEBUG:
@@ -78,6 +83,9 @@ class EpoptesClientRegister:
 
 		self.n4d_man=N4dManager.N4dManager()
 		self.n4d_man.set_server(args_dic[self.server])
+		print("Server is: %s"%args_dic[self.server])
+		print(args_dic)
+
 		
 		if args_dic["gui"]:
 			
@@ -122,12 +130,34 @@ class EpoptesClientRegister:
 		#self.refresh_button.set_label("Refresh")
 		self.ok_button=builder.get_object("ok_button")
 		self.cancel_button=builder.get_object("cancel_button")
+		self.center_code_label=builder.get_object("label1")
 		self.center_code=builder.get_object("entry2")
 		self.aula_combo=builder.get_object("aula_combo")
 		self.register_msg_label=builder.get_object("register_msg_label")
+		
+		#test si tenemos listado de Ips reseervadas para los servers de los carritos
+		# generacion listado de carros disponibles
+		if os.path.exists(self.server_list_file):
+			with open (self.server_list_file, 'r') as fp:
+				for line in fp:
+					#elimino ultimo caracter de salto de pagina
+					x=line[:-1]
+					self.server_list.append(x)
+			self.dprint('Server Ip List; %s'%self.server_list)
+			for count,ele in enumerate(self.server_list,start=1):
+				self.aulas.append ('Carrito '  +str(count))
+			self.dprint('Carritos List: %s'%self.aulas)		
+			self.login_button.set_sensitive(True)
+		else:
+			self.login_button.set_sensitive(False)
+			self.login_msg_label.set_text(_("You don't have reserved server Ips..."))
 
 		cod_center=self.cod_center_capture()
 		aula_store_dates=self.comboboxAulas()
+
+		self.center_code.hide()
+		self.refresh_button.hide()
+		self.center_code_label.hide()
 
 		self.center_code.set_text(cod_center)
 
@@ -143,7 +173,7 @@ class EpoptesClientRegister:
 		
 		self.set_css_info()
 		
-		self.connect_signals()
+		self.connect_signals()		
 		self.main_window.show()
 		
 	#def start_gui
@@ -202,7 +232,7 @@ class EpoptesClientRegister:
 		user=self.entry_user.get_text()
 		password=self.entry_password.get_text()
 		self.user_val=(user,password)
-		server="server"
+		server="localhost"
 		
 		self.validate_user(user,password)
 		
@@ -213,8 +243,11 @@ class EpoptesClientRegister:
 	def press_ok_button(self,button):
 
 		try:
+			file="/etc/default/epoptes-client"
+			self.ok_button.set_sensitive(False)
 			aula=self.on_aula_combo_changed(self.aula_combo)
 			center_code=self.center_code.get_text()
+			
 			if "Error" in center_code  or  "Error" in aula:
 				self.register_msg_label.set_markup("<span foreground='red'>"+_("Error Computer registering")+"</span>")
 				self.dprint("Error Computer registering")
@@ -228,7 +261,13 @@ class EpoptesClientRegister:
 				else:
 					print("- Center Code: %s"%center_code)
 					print("- Aula: %s"%aula)
-
+					for i, elem in enumerate(self.aulas):
+						if elem == aula:
+							index=i
+					for i, elem in enumerate(self.server_list):
+						if i == index:
+							ipserver=elem
+					
 					fail_set_variable=False
 					self.dprint("Computer registered")
 					if self.n4d_man.set_variable(self.n4d_var_code,center_code):
@@ -239,13 +278,23 @@ class EpoptesClientRegister:
 						self.dprint("     - Classroom: %s"%aula)
 					else:
 						fail_set_variable=True
+					if self.n4d_man.set_variable(self.n4d_var_epoptes_ipserver,ipserver):
+						self.dprint("     - Ip Server: %s"%ipserver)
+					else:
+						fail_set_variable=True
 
 					if fail_set_variable:
 						self.dprint("Error Computer registered")
 						self.register_msg_label.set_markup("<span foreground='red'>"+_("Error Computer registered")+"</span>")
 					else:
-						self.register_msg_label.set_markup("<span foreground='blue'>"+_("Computer registered  - Center:%s  - Classroom:%s "%(center_code,aula))+"</span>")
+						solved=self.set_new_epoptes_server(file,ipserver)
+						print(solved)
+						if solved:
+							self.register_msg_label.set_markup("<span foreground='blue'>"+_("Computer registered  - Center:%s  - Classroom:%s "%(center_code,aula))+"</span>")
+						else:
+							self.register_msg_label.set_markup("<span foreground='red'>"+_("Error Computer registered")+"</span>")
 						
+			self.ok_button.set_sensitive(True)
 
 		except Exception as e:
 			self.dprint("Exception Error Computer registered")
@@ -288,10 +337,12 @@ class EpoptesClientRegister:
 		self.login_button.set_sensitive(True)
 		
 		if not self.n4d_man.user_validated:
+			print("error validando usuario")
+			print(self.n4d_man.user_validated)
 			self.login_msg_label.set_markup("<span foreground='red'>"+_("Invalid user, please only net admin users.")+"</span>")
 		else:
 			group_found=False
-			for g in ["admins"]:
+			for g in ["admins","root","sudo","adm"]:
 				if g in self.n4d_man.user_groups:
 					group_found=True
 					break
@@ -371,14 +422,7 @@ class EpoptesClientRegister:
 	def comboboxAulas(self):
 		try:
 			aula_store = Gtk.ListStore(str)
-			aulas = [
-				"Aula 1",
-				"Aula 2",
-				"Aula 3",
-				"Aula 4",
-				"Aula 5"
-			]
-			for aula in aulas:
+			for aula in self.aulas:
 				aula_store.append([aula])
 			return aula_store
 		except Exception as e:
@@ -429,7 +473,38 @@ class EpoptesClientRegister:
 			return "Error set_aula_combo"
 
 	#def on_aula_combo_changed
-
+	
+	
+	def set_new_epoptes_server(self,file,server):
+		try:
+			file_tmp="/tmp/epoptes_register.txt.tmp"
+			if os.path.isfile(file_tmp):
+				os.remove(file_tmp)
+			file_orig=open(file, "r")
+			print(2)
+			lines=file_orig.readlines()
+			newlines = []
+			for line in lines:
+				print(3)
+				if "SERVER" in line:
+					line = "SERVER=%s"%server
+				newlines.append(line)
+			file_orig.close()
+			print(4)
+			f=open(file_tmp,"a")
+			f.writelines(newlines)
+			f.close()
+			print(5)
+			os.rename(file_tmp,file)
+			
+			return True
+		
+		except Exception as e:
+			self.dprint("Error set_new_epoptes_server")
+			self.register_msg_label.set_markup("<span foreground='red'>"+_("Error set_new_epoptes_server")+"</span>")
+			return False
+			
+	#def_set_new_epoptes_server
 
 
 

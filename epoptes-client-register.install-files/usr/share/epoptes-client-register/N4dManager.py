@@ -3,7 +3,8 @@ import ssl
 import threading
 import time
 import n4d.client
-import n4d.server.core
+
+
 import os
 
 
@@ -20,8 +21,7 @@ class N4dManager:
 		self.user_groups=[]
 		self.validation=None
 
-
-		#self.core=n4d.server.core.Core.get_core()
+		#self.core = n4d.server.core.Core.get_core()
 
 		if server!=None:
 			self.set_server(server)
@@ -106,7 +106,7 @@ class N4dManager:
 		
 		try:
 			self.mprint('(get_variable) Call N4D function..')
-			self.variable=self.client.get_variable(N4D_VAR)
+			self.variable=self.local_client.get_variable(N4D_VAR)
 			self.mprint('(get_variable) VAR is: %s'%self.variable)
 			return [True,self.variable]
 		
@@ -121,7 +121,7 @@ class N4dManager:
 	def set_variable (self,N4D_VAR,dict_var):
 		
 		try:
-			solved=self.client.set_variable(N4D_VAR,dict_var)
+			solved=self.local_client.set_variable(N4D_VAR,dict_var)
 			self.mprint('(set_variable) %s'%solved)
 			if solved:
 				return True
