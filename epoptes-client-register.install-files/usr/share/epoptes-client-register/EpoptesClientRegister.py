@@ -245,6 +245,7 @@ class EpoptesClientRegister:
 		try:
 			file="/etc/default/epoptes-client"
 			self.ok_button.set_sensitive(False)
+			self.cancel_button.set_sensitive(False)
 			aula=self.on_aula_combo_changed(self.aula_combo)
 			center_code=self.center_code.get_text()
 			
@@ -289,13 +290,14 @@ class EpoptesClientRegister:
 					else:
 						solved=self.set_new_epoptes_server(file,ipserver)
 						print(solved)
-						self.restart_client_service()
+						#self.restart_client_service()
 						if solved:
-							self.register_msg_label.set_markup("<span foreground='blue'>"+_("Computer registered  - Center:%s  - Classroom:%s "%(center_code,aula))+"</span>")
+							self.register_msg_label.set_markup("<span foreground='blue'>"+_("Computer registered  - Carrito:%s - Please restart the Xsession "%(aula))+"</span>")
 						else:
 							self.register_msg_label.set_markup("<span foreground='red'>"+_("Error Computer registered")+"</span>")
 						
 			self.ok_button.set_sensitive(True)
+			self.cancel_button.set_sensitive(True)
 
 		except Exception as e:
 			self.dprint("Exception Error Computer registered")
