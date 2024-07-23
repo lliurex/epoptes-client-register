@@ -10,6 +10,7 @@ import gettext
 import sys
 import threading
 import copy
+import shutil
 import subprocess
 import os
 import N4dManager
@@ -260,8 +261,8 @@ class EpoptesClientRegister:
 					self.dprint("Registered failed, please select one clasroom in list.")
 					self.register_msg_label.set_markup("<span foreground='red'>"+_("Registered failed, please select one clasroom in list.")+"</span>")
 				else:
-					print("- Center Code: %s"%center_code)
-					print("- Aula: %s"%aula)
+					self.dprint("- Center Code: %s"%center_code)
+					self.dprint("- Aula: %s"%aula)
 					for i, elem in enumerate(self.aulas):
 						if elem == aula:
 							index=i
@@ -289,7 +290,7 @@ class EpoptesClientRegister:
 						self.register_msg_label.set_markup("<span foreground='red'>"+_("Error Computer registered")+"</span>")
 					else:
 						solved=self.set_new_epoptes_server(file,ipserver)
-						print(solved)
+						self.dprint(solved)
 						#self.restart_client_service()
 						if solved:
 							self.register_msg_label.set_markup("<span foreground='blue'>"+_("Computer registered  - Carrito:%s - Please restart the Xsession "%(aula))+"</span>")
@@ -341,7 +342,7 @@ class EpoptesClientRegister:
 		
 		if not self.n4d_man.user_validated:
 			print("error validando usuario")
-			print(self.n4d_man.user_validated)
+			self.dprint(self.n4d_man.user_validated)
 			self.login_msg_label.set_markup("<span foreground='red'>"+_("Invalid user, please only net admin users.")+"</span>")
 		else:
 			group_found=False
@@ -484,21 +485,22 @@ class EpoptesClientRegister:
 			if os.path.isfile(file_tmp):
 				os.remove(file_tmp)
 			file_orig=open(file, "r")
-			print(2)
+			self.dprint(2)
 			lines=file_orig.readlines()
 			newlines = []
 			for line in lines:
-				print(3)
+				self.dprint(3)
 				if "SERVER" in line:
 					line = "SERVER=%s\n"%server
 				newlines.append(line)
 			file_orig.close()
-			print(4)
+			self.dprint(4)
 			f=open(file_tmp,"a")
 			f.writelines(newlines)
 			f.close()
-			print(5)
-			os.rename(file_tmp,file)
+			self.dprint(5)
+			#os.rename(file_tmp,file)
+			shutil.copy(file_tmp,file)
 			
 			return True
 		
