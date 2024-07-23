@@ -8,5 +8,6 @@ Comment[qcv]=Registra el PC amb el Codi de Centre de la GVA i l'aula a la qual p
 Icon=epoptes-client-register
 Groups=admins;sudo;
 Category=configuration
+Using=pkexec
 ScriptPath=epoptes-client-register.zmd
 
