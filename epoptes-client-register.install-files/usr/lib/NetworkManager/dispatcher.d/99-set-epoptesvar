@@ -5,27 +5,16 @@ from n4d import client
 import ipaddress
 supported_methods = ['dhcp4-change','dhcp6-change']
 args = sys.argv[1:]
-with open('/tmp/gatito','a') as fd:
-    fd.write(str(args)+"\n")
 try:
     if ( args[1] in supported_methods ) :
-        with open('/tmp/loggatito','a') as fff:
-            with open('/etc/n4d/key','r') as fd:
-                mk = fd.read().strip()
-            fff.write("1\n")
-            c = client.Client(address='https://127.0.0.1:9779',key=mk)
-            fff.write("2\n")
-            network_string = c.get_variable('LLIUREX_VLAN')
-            fff.write("3\n")
-            network = ipaddress.ip_network(network_string)
-            fff.write("4\n")
-            list_servers = list(map(str, list(network.hosts())[:-10:-1]))
-            fff.write("5\n")
-            c.set_variable('EPOPTES_SERVERS',list_servers)
-            fff.write("6\n")
+        with open('/etc/n4d/key','r') as fd:
+            mk = fd.read().strip()
+        c = client.Client(address='https://127.0.0.1:9779',key=mk)
+        network_string = c.get_variable('LLIUREX_VLAN')
+        network = ipaddress.ip_network(network_string)
+        list_servers = list(map(str, list(network.hosts())[:-10:-1]))
+        c.set_variable('EPOPTES_SERVERS',list_servers)
     else:
-        with open('/tmp/loggatito','a') as fd:
-            fd.write("fallando con " + str(args) + "\n")
+        print("Method " + str(args) + " not supported \n")
 except Exception as e:
-    with open('/tmp/excepciones','a') as fd:
-        fd.write(str(e))
+        print("Error on set epoptes variable" + str(e) )
