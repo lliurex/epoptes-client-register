@@ -3,8 +3,8 @@ Section: admin
 Priority: optional
 Maintainer: Equipo LliureX <lliurex@gva.es>
 Uploaders:Raul Rodrigo Segura <lliurex_devel3@edu.gva.es>, Hector Garcia Huerta <lliurex_devel1@edu.gva.es>, Daniel Duran Vecino <daduve@gmail.com>, M.Angel Juan <m.angel.juan@gmail.com>
-Build-Depends:llxsrchelper,debhelper (>= 9), python3-pkexec-debhelper, python3-poinstaller, zero-dev
-Standards-Version: 3.9.5
+Build-Depends:llxsrchelper,debhelper (>= 10), python3-pkexec-debhelper, python3-poinstaller, zero-dev
+Standards-Version: 4.1.2
 
 Package: epoptes-client-register
 Architecture: all

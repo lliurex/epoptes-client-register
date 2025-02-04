@@ -8,7 +8,6 @@
 
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
-
 %:
-	dh $@ --with llxsrc,i18n,zero
+	dh $@ --with llxsrc,python3,zero,i18n
 	
