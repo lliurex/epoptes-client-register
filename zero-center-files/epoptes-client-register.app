@@ -6,8 +6,7 @@ Comment=Register your PC with GVA Center Code & Clasrroom
 Comment[es]=Registra el PC con el Código de Centro de la GVA & el aula a la que pertenece.
 Comment[qcv]=Registra el PC amb el Codi de Centre de la GVA i l'aula a la qual pertany.
 Icon=epoptes-client-register
-Groups=admins;sudo;
+Groups=admins;sudo;teachers
 Category=configuration
 Using=pkexec
 ScriptPath=epoptes-client-register.zmd
-

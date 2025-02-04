@@ -10,11 +10,10 @@ import gettext
 import sys
 import threading
 import copy
-import shutil
 import subprocess
 import os
 import N4dManager
-import xmlrpc.client
+import xmlrpc.client as n4dclient
 import ssl
 import time
 import Dialog
@@ -61,17 +60,17 @@ class Spinner:
 
 class EpoptesClientRegister:
 	
-	DEBUG=True
+	DEBUG=False
 
 	server="server"
 
 	n4d_var_code="CENTER_CODE"
 	n4d_var_classroom="CLIENT_CLASSROOM"
 	n4d_var_epoptes_ipserver='EPOPTES IP SERVER'
+	file="/etc/hosts"
 	
 	server_list=[]
 	aulas=[]
-	server_list_file='/usr/share/epoptes-client-register/server_ip.list'
 	
 	def dprint(self,arg):
 		if EpoptesClientRegister.DEBUG:
@@ -138,20 +137,25 @@ class EpoptesClientRegister:
 		
 		#test si tenemos listado de Ips reseervadas para los servers de los carritos
 		# generacion listado de carros disponibles
-		if os.path.exists(self.server_list_file):
-			with open (self.server_list_file, 'r') as fp:
-				for line in fp:
-					#elimino ultimo caracter de salto de pagina
-					x=line[:-1]
-					self.server_list.append(x)
-			self.dprint('Server Ip List; %s'%self.server_list)
-			for count,ele in enumerate(self.server_list,start=1):
-				self.aulas.append ('Carrito '  +str(count))
-			self.dprint('Carritos List: %s'%self.aulas)		
-			self.login_button.set_sensitive(True)
-		else:
+		context=ssl._create_unverified_context()
+		c_local=n4dclient.ServerProxy('https://localhost:9779',context=context,allow_none=True)
+		epoptes_servers=c_local.get_variable("EPOPTES_SERVERS")
+		print(epoptes_servers)
+		#server_list=epoptes_servers["return"]
+		if self.server_list==None:
+			print("Network Variable is empty, please call to SAI.")
 			self.login_button.set_sensitive(False)
 			self.login_msg_label.set_text(_("You don't have reserved server Ips..."))
+			sys.exit(1)
+		for elem in epoptes_servers["return"]:
+			self.server_list.append(elem.split('/')[0])
+		print("EPOPTES_SERVERS: %s"%(self.server_list))
+
+		#generate carritos list for combobox
+		for count,ele in enumerate(self.server_list,start=1):
+			self.aulas.append('Carro '  +str(count))
+		print('Carritos List: %s'%self.aulas)
+		self.login_button.set_sensitive(True)
 
 		cod_center=self.cod_center_capture()
 		aula_store_dates=self.comboboxAulas()
@@ -244,7 +248,7 @@ class EpoptesClientRegister:
 	def press_ok_button(self,button):
 
 		try:
-			file="/etc/default/epoptes-client"
+			#file="/etc/default/epoptes-client"
 			self.ok_button.set_sensitive(False)
 			self.cancel_button.set_sensitive(False)
 			aula=self.on_aula_combo_changed(self.aula_combo)
@@ -261,11 +265,14 @@ class EpoptesClientRegister:
 					self.dprint("Registered failed, please select one clasroom in list.")
 					self.register_msg_label.set_markup("<span foreground='red'>"+_("Registered failed, please select one clasroom in list.")+"</span>")
 				else:
-					self.dprint("- Center Code: %s"%center_code)
-					self.dprint("- Aula: %s"%aula)
-					for i, elem in enumerate(self.aulas):
-						if elem == aula:
-							index=i
+					print("- Center Code: %s"%center_code)
+					print("- Aula: %s"%aula)
+					if aula=='Aula':
+						index=0
+					else:
+						for i, elem in enumerate(self.aulas):
+							if elem == aula:
+								index=i
 					for i, elem in enumerate(self.server_list):
 						if i == index:
 							ipserver=elem
@@ -289,7 +296,7 @@ class EpoptesClientRegister:
 						self.dprint("Error Computer registered")
 						self.register_msg_label.set_markup("<span foreground='red'>"+_("Error Computer registered")+"</span>")
 					else:
-						solved=self.set_new_epoptes_server(file,ipserver)
+						solved=self.set_new_epoptes_server(self.file,ipserver)
 						self.dprint(solved)
 						#self.restart_client_service()
 						if solved:
@@ -342,7 +349,7 @@ class EpoptesClientRegister:
 		
 		if not self.n4d_man.user_validated:
 			print("error validando usuario")
-			self.dprint(self.n4d_man.user_validated)
+			print(self.n4d_man.user_validated)
 			self.login_msg_label.set_markup("<span foreground='red'>"+_("Invalid user, please only net admin users.")+"</span>")
 		else:
 			group_found=False
@@ -372,10 +379,16 @@ class EpoptesClientRegister:
 					text_solved=text_solved+"Code value is empty. "
 
 				self.var_classroom_value=self.n4d_man.get_variable(self.n4d_var_classroom)
+				self.dprint(self.var_classroom_value)
 				if self.var_classroom_value[0]:
-					fail_get_variable=True
-					self.set_aula_combo(self.var_classroom_value[1])
+					if self.var_classroom_value[1]!="Aula":
+						fail_get_variable=True
+						self.set_aula_combo(self.var_classroom_value[1])
+					else:
+						self.set_aula_combo('Aula')
+						text_solved=text_solved+"Initial Aula value is empty."
 				else:
+					self.set_aula_combo('Aula')
 					text_solved=text_solved+"Initial Aula value is empty."
 
 				if fail_get_variable:
@@ -426,6 +439,7 @@ class EpoptesClientRegister:
 	def comboboxAulas(self):
 		try:
 			aula_store = Gtk.ListStore(str)
+			aula_store.append(['Aula'])
 			for aula in self.aulas:
 				aula_store.append([aula])
 			return aula_store
@@ -446,7 +460,7 @@ class EpoptesClientRegister:
 			if tree_iter is not None:
 				model = combo.get_model()
 				aula = model[tree_iter][0]
-				#print("Selected: aula=%s" % aula)
+				self.dprint("Selected: aula=%s" % aula)
 			return aula
 		except Exception as e:
 			self.dprint("Error on_aula_combo_changed")
@@ -459,8 +473,8 @@ class EpoptesClientRegister:
 	def set_aula_combo(self,aula):
 		try:
 			model = self.aula_combo.get_model()
-			#print(model)
-			#print(model[model.get_iter_first()][0])
+			self.dprint(model)
+			self.dprint(model[model.get_iter_first()][0])
 			tree_iter=model.get_iter_first()
 			while tree_iter is not None:
 				if aula in model[tree_iter][0]:
@@ -481,26 +495,25 @@ class EpoptesClientRegister:
 	
 	def set_new_epoptes_server(self,file,server):
 		try:
-			file_tmp="/tmp/epoptes_register.txt.tmp"
+			file_tmp="/tmp/epoptes_hosts.tmp"
 			if os.path.isfile(file_tmp):
 				os.remove(file_tmp)
 			file_orig=open(file, "r")
-			self.dprint(2)
 			lines=file_orig.readlines()
 			newlines = []
 			for line in lines:
-				self.dprint(3)
-				if "SERVER" in line:
-					line = "SERVER=%s\n"%server
-				newlines.append(line)
+				if not "server" in line:
+					newlines.append(line)
+			line = "%s server\n"%server	
+			newlines.append(line)
 			file_orig.close()
-			self.dprint(4)
 			f=open(file_tmp,"a")
 			f.writelines(newlines)
 			f.close()
-			self.dprint(5)
-			#os.rename(file_tmp,file)
-			shutil.copy(file_tmp,file)
+			#os.system('touch /etc/pepito_grillo')
+			if os.path.isfile(file):
+				os.remove(file)
+			os.system('mv %s %s'%(file_tmp, file))
 			
 			return True
 		
@@ -510,7 +523,8 @@ class EpoptesClientRegister:
 			return False
 			
 	#def_set_new_epoptes_server
-
+	
+	
 
 	def restart_client_service(self):
 		try:
