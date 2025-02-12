@@ -65,9 +65,7 @@ class EpoptesClientRegister:
 	server="server"
 
 	n4d_var_code="CENTER_CODE"
-	n4d_var_classroom="CLIENT_CLASSROOM"
-	n4d_var_epoptes_ipserver='EPOPTES IP SERVER'
-	file="/etc/hosts"
+	n4d_var_classroom="CONTROLLED_CLASSROOM"
 	
 	server_list=[]
 	aulas=[]
@@ -287,22 +285,12 @@ class EpoptesClientRegister:
 						self.dprint("     - Classroom: %s"%aula)
 					else:
 						fail_set_variable=True
-					if self.n4d_man.set_variable(self.n4d_var_epoptes_ipserver,ipserver):
-						self.dprint("     - Ip Server: %s"%ipserver)
-					else:
-						fail_set_variable=True
 
 					if fail_set_variable:
 						self.dprint("Error Computer registered")
 						self.register_msg_label.set_markup("<span foreground='red'>"+_("Error Computer registered")+"</span>")
 					else:
-						solved=self.set_new_epoptes_server(self.file,ipserver)
-						self.dprint(solved)
-						#self.restart_client_service()
-						if solved:
-							self.register_msg_label.set_markup("<span foreground='blue'>"+_("Computer registered  - Carrito:%s - Please restart the Xsession "%(aula))+"</span>")
-						else:
-							self.register_msg_label.set_markup("<span foreground='red'>"+_("Error Computer registered")+"</span>")
+						self.register_msg_label.set_markup("<span foreground='blue'>"+_("Computer registered  - Carrito:%s - Please restart the Xsession "%(aula))+"</span>")
 						
 			self.ok_button.set_sensitive(True)
 			self.cancel_button.set_sensitive(True)
