@@ -65,7 +65,8 @@ class EpoptesClientRegister:
 	server="server"
 
 	n4d_var_code="CENTER_CODE"
-	n4d_var_classroom="CONTROLLED_CLASSROOM"
+	n4d_var_classroom="CLIENT_CLASSROOM"
+	n4d_var_controlled_classroom='CONTROLLED_CLASSROOM'
 	
 	server_list=[]
 	aulas=[]
@@ -283,6 +284,10 @@ class EpoptesClientRegister:
 						fail_set_variable=True
 					if self.n4d_man.set_variable(self.n4d_var_classroom,aula):
 						self.dprint("     - Classroom: %s"%aula)
+					else:
+						fail_set_variable=True
+					if self.n4d_man.set_variable(n4d_var_controlled_classroom,index):
+						self.dprint("     - Index: %s"%index)
 					else:
 						fail_set_variable=True
 
