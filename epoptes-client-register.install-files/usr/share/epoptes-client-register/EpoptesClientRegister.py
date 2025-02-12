@@ -68,7 +68,7 @@ class EpoptesClientRegister:
 	n4d_var_classroom="CLIENT_CLASSROOM"
 	n4d_var_controlled_classroom='CONTROLLED_CLASSROOM'
 	
-	server_list=[]
+	carros=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14]
 	aulas=[]
 	
 	def dprint(self,arg):
@@ -133,25 +133,10 @@ class EpoptesClientRegister:
 		self.center_code=builder.get_object("entry2")
 		self.aula_combo=builder.get_object("aula_combo")
 		self.register_msg_label=builder.get_object("register_msg_label")
-		
-		#test si tenemos listado de Ips reseervadas para los servers de los carritos
-		# generacion listado de carros disponibles
-		context=ssl._create_unverified_context()
-		c_local=n4dclient.ServerProxy('https://localhost:9779',context=context,allow_none=True)
-		epoptes_servers=c_local.get_variable("EPOPTES_SERVERS")
-		print(epoptes_servers)
-		#server_list=epoptes_servers["return"]
-		if self.server_list==None:
-			print("Network Variable is empty, please call to SAI.")
-			self.login_button.set_sensitive(False)
-			self.login_msg_label.set_text(_("You don't have reserved server Ips..."))
-			sys.exit(1)
-		for elem in epoptes_servers["return"]:
-			self.server_list.append(elem.split('/')[0])
-		print("EPOPTES_SERVERS: %s"%(self.server_list))
 
 		#generate carritos list for combobox
-		for count,ele in enumerate(self.server_list,start=1):
+		self.aulas.append('Aula')
+		for count,ele in enumerate(self.carros,start=1):
 			self.aulas.append('Carro '  +str(count))
 		print('Carritos List: %s'%self.aulas)
 		self.login_button.set_sensitive(True)
@@ -272,12 +257,9 @@ class EpoptesClientRegister:
 						for i, elem in enumerate(self.aulas):
 							if elem == aula:
 								index=i
-					for i, elem in enumerate(self.server_list):
-						if i == index:
-							ipserver=elem
 					
 					fail_set_variable=False
-					self.dprint("Computer registered")
+					print("Computer registered")
 					if self.n4d_man.set_variable(self.n4d_var_code,center_code):
 						self.dprint("     - Center Code: %s"%center_code)
 					else:
@@ -432,7 +414,6 @@ class EpoptesClientRegister:
 	def comboboxAulas(self):
 		try:
 			aula_store = Gtk.ListStore(str)
-			aula_store.append(['Aula'])
 			for aula in self.aulas:
 				aula_store.append([aula])
 			return aula_store
