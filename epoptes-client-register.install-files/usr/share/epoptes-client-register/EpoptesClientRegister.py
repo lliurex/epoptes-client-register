@@ -286,8 +286,8 @@ class EpoptesClientRegister:
 						self.dprint("     - Classroom: %s"%aula)
 					else:
 						fail_set_variable=True
-					if self.n4d_man.set_variable(n4d_var_controlled_classroom,index):
-						self.dprint("     - Index: %s"%index)
+					if self.n4d_man.set_variable(self.n4d_var_controlled_classroom,index):
+						self.dprint("     - CONTROLLED_CLASSROOM: %s"%index)
 					else:
 						fail_set_variable=True
 
