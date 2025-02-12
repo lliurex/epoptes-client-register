@@ -1,3 +1,9 @@
+epoptes-client-register (1.1) jammy; urgency=medium
+
+  * New variable added & delete obsolete methods.
+
+ -- Daniel Duran <daduve@gmail.com>  Wed, 12 Feb 2025 19:17:00 +0100
+
 epoptes-client-register (1.0) jammy; urgency=high
 
   * Initial release.
